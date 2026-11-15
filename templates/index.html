@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Distributed Blockchain</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            color: #333;
+            background: #fff;
+        }
+
+        .navbar {
+            height: 66px;
+            background: linear-gradient(#333, #1f1f1f);
+            color: #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            box-shadow: 0 2px 5px #aaa;
+        }
+
+        .brand {
+            font-size: 22px;
+        }
+
+        .nav-links {
+            display: flex;
+            height: 100%;
+            align-items: stretch;
+        }
+
+        .nav-links span {
+            padding: 0 18px;
+            display: flex;
+            align-items: center;
+            color: #bbb;
+        }
+
+        .nav-links .active {
+            color: white;
+            background: #111;
+            font-weight: bold;
+        }
+
+        main {
+            padding: 24px 20px 40px;
+        }
+
+        h1 {
+            font-size: 34px;
+            font-weight: 400;
+            margin: 0 0 26px;
+        }
+
+        h2 {
+            font-size: 28px;
+            font-weight: 400;
+            margin: 0;
+        }
+
+        .peer-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin: 0 0 14px;
+        }
+
+        .status {
+            display: inline-block;
+            margin: 0 0 18px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            background: #e8f4e5;
+            font-size: 14px;
+        }
+
+        .status.invalid {
+            background: #f8dddd;
+        }
+
+        .notice {
+            padding: 11px 14px;
+            margin: 0 0 16px;
+            border-radius: 4px;
+            max-width: 700px;
+        }
+
+        .notice.success {
+            background: #e4f3e1;
+            color: #285c24;
+        }
+
+        .notice.error {
+            background: #f8e2e2;
+            color: #8a2525;
+        }
+
+        .inline-tx-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr 85px auto;
+            gap: 6px;
+        }
+
+        input {
+            min-width: 0;
+            padding: 9px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 13px;
+            background: #fff;
+        }
+
+        button {
+            border: 0;
+            border-radius: 5px;
+            padding: 9px 13px;
+            background: #286090;
+            color: white;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #204d74;
+        }
+
+        .btn-reset {
+            background: #d9534f;
+            padding: 9px 15px;
+            font-size: 14px;
+        }
+
+        .btn-reset:hover {
+            background: #c9302c;
+        }
+
+        .blocks-wrap {
+            display: flex;
+            gap: 38px;
+            overflow-x: auto;
+            padding: 4px 0 14px;
+            align-items: stretch;
+        }
+
+        .block-card {
+            flex: 0 0 580px;
+            background: #dff0d8;
+            border: 1px solid #c9dfc3;
+            border-radius: 5px;
+            padding: 24px;
+            transition: background 0.2s ease, border-color 0.2s ease;
+        }
+
+        .block-card.invalid {
+            background: #f2dede;
+            border-color: #ebccd1;
+        }
+
+        .field-row {
+            display: grid;
+            grid-template-columns: 85px minmax(0, 1fr);
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 19px;
+        }
+
+        .field-label {
+            font-weight: bold;
+            padding-top: 10px;
+            text-align: right;
+        }
+
+        .field-value {
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            min-height: 44px;
+            padding: 12px 14px;
+            overflow-wrap: anywhere;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            color: #333;
+        }
+
+        textarea.data-value {
+            width: 100%;
+            height: 240px;
+            resize: vertical;
+            line-height: 1.6;
+            outline: none;
+        }
+
+        textarea.data-value:focus {
+            border-color: #66afe9;
+            box-shadow: 0 0 4px rgba(102, 175, 233, 0.5);
+        }
+
+        .hash-value {
+            background: #eee;
+            min-height: 44px;
+        }
+
+        .mine-row {
+            padding-left: 95px;
+        }
+
+        .mine-row button {
+            padding: 11px 18px;
+            font-size: 15px;
+        }
+
+        @media (max-width: 760px) {
+            .navbar {
+                padding: 0 16px;
+            }
+
+            .nav-links span {
+                display: none;
+            }
+
+            .nav-links .active {
+                display: flex;
+            }
+
+            main {
+                padding: 22px 14px;
+            }
+
+            h1 {
+                font-size: 29px;
+            }
+
+            .inline-tx-form {
+                grid-template-columns: 1fr;
+            }
+
+            .block-card {
+                flex-basis: min(580px, 88vw);
+                padding: 17px;
+            }
+
+            .field-row {
+                grid-template-columns: 65px minmax(0, 1fr);
+                gap: 8px;
+            }
+
+            .field-label {
+                font-size: 13px;
+            }
+
+            .mine-row {
+                padding-left: 73px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main>
+        <h1>Blockchain NN</h1>
+
+
+
+        <div class="blocks-wrap">
+            {% for block in blocks %}
+            <section class="block-card {% if not block.is_valid %}invalid{% endif %}"
+                data-block-index="{{ block.index }}">
+                <div class="field-row">
+                    <div class="field-label">Block:</div>
+                    <div class="field-value">{{ block.index }}</div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Nonce:</div>
+                    <div class="field-value nonce-value">{{ block.nonce }}</div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Transaksi:</div>
+                    <form class="inline-tx-form" action="{{ url_for('add_transaction') }}" method="POST">
+                        <input type="hidden" name="block_index" value="{{ block.index }}">
+                        <input type="text" name="sender" placeholder="Pengirim" required>
+                        <input type="text" name="receiver" placeholder="Penerima" required>
+                        <input type="number" name="amount" placeholder="Jumlah" min="0.01" step="any" required>
+                        <button type="submit">Tambah</button>
+                    </form>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Data:</div>
+                    <textarea class="field-value data-value"
+                        data-block-index="{{ block.index }}">{{ block.data }}</textarea>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Prev:</div>
+                    <div class="field-value hash-value prev-value">{{ block.previous_hash }}</div>
+                </div>
+                <div class="field-row">
+                    <div class="field-label">Hash:</div>
+                    <div class="field-value hash-value hash-value-text">{{ block.hash }}</div>
+                </div>
+                <div class="mine-row">
+                    <form action="{{ url_for('mine') }}" method="POST">
+                        <input type="hidden" name="block_index" value="{{ block.index }}">
+                        <button type="submit">Mine</button>
+                    </form>
+                </div>
+            </section>
+            {% endfor %}
+        </div>
+        <div class="peer-header">
+            <form action="{{ url_for('reset') }}" method="POST">
+                <button type="submit" class="btn-reset">Reset</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        let latestRequestId = 0;
+
+        document.querySelectorAll("textarea.data-value").forEach((textarea) => {
+            textarea.addEventListener("input", async () => {
+                const blockIndex = Number(textarea.dataset.blockIndex);
+                const newData = textarea.value;
+                const reqId = ++latestRequestId;
+
+                try {
+                    const response = await fetch("{{ url_for('tamper') }}", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ block_index: blockIndex, data: newData })
+                    });
+
+                    if (!response.ok || reqId !== latestRequestId) return;
+                    const result = await response.json();
+
+                    const statusEl = document.getElementById("chain-status");
+                    const statusTextEl = document.getElementById("chain-status-text");
+                    statusEl.classList.toggle("invalid", !result.is_valid);
+                    statusTextEl.textContent = result.is_valid ? "Valid / Tervalidasi" : "Tidak Valid";
+
+                    result.blocks.forEach((block) => {
+                        const card = document.querySelector(`.block-card[data-block-index="${block.index}"]`);
+                        if (!card) return;
+
+                        card.classList.toggle("invalid", !block.is_valid);
+                        card.querySelector(".prev-value").textContent = block.previous_hash;
+                        card.querySelector(".hash-value-text").textContent = block.hash;
+                    });
+                } catch (err) {
+                    console.error("Gagal memperbarui data blok:", err);
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
